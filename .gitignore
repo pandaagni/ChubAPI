@@ -1,0 +1,62 @@
+# Build Folders
+bin/
+obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Logs
+*.log
+
+# Visual Studio specific
+.vs/
+.vscode/
+
+# Rider specific
+.idea/
+*.sln.iml
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Package directories
+**/node_modules/
+**/packages/
+
+# Publish output
+wwwroot/
+dist/
+
+# Configuration files
+appsettings.*.json
+launchSettings.json
+
+# Dependency lock files
+project.lock.json
+global.json
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+
+# Backup files
+*.bak
+*.swp
+*.tmp
+~$*
+
+# Coverage and test results
+coverage/
+TestResults/
+*.coverage
+*.coveragexml
+*.trx
