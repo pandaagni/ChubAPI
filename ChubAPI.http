@@ -1,6 +1,5 @@
 @ChubAPI_HostAddress = http://localhost:5068
 
-GET {{ChubAPI_HostAddress}}/weatherforecast/
-Accept: application/json
+
 
 ###
