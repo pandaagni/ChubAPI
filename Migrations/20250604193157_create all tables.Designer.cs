@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChubAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250520191453_create all tables")]
+    [Migration("20250604193157_create all tables")]
     partial class createalltables
     {
         /// <inheritdoc />
@@ -27,11 +27,9 @@ namespace ChubAPI.Migrations
 
             modelBuilder.Entity("ChubAPI.Models.Entity.Chatroom", b =>
                 {
-                    b.Property<int>("ChatroomId")
+                    b.Property<Guid>("ChatroomId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChatroomId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChubAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250520192143_add chatroom table")]
-    partial class addchatroomtable
+    [Migration("20250604202540_update pk for User table")]
+    partial class updatepkforUsertable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,12 +102,10 @@ namespace ChubAPI.Migrations
             modelBuilder.Entity("ChubAPI.Models.Entity.User", b =>
                 {
                     b.Property<Guid>("UserID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -120,7 +118,7 @@ namespace ChubAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserID");
+                    b.HasKey("UserID", "Email");
 
                     b.ToTable("User");
                 });

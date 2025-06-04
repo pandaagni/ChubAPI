@@ -3,6 +3,7 @@
 namespace ChubAPI.Models.Entity
 {
     [PrimaryKey(nameof(UserID))]
+    [Index(nameof(Email), IsUnique = true)]  
     public class User
     {
         public Guid UserID { get; set; }
