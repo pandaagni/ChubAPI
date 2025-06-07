@@ -8,6 +8,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
+using Microsoft.AspNetCore.Authorization;
 
 
 
@@ -24,11 +26,19 @@ namespace ChubAPI.Controllers
             _context = context;
         }
 
+
+        [HttpGet]
+        [Route("status")]
+        public async Task<ActionResult<String>> Status()
+        {
+            return Ok("Success");
+        }
+
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<SecurityToken>> Login(UserLogin user)
+        public async Task<ActionResult> Login(UserLogin user)
         {
-            var userDetails = await _context.User.FirstOrDefaultAsync(u => u.Email == user.Email); // Use FirstOrDefaultAsync instead of FirstOrDefault
+            var userDetails = await _context.User.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (userDetails == null)
             {
                 return NotFound();
@@ -46,18 +56,23 @@ namespace ChubAPI.Controllers
             {
                 Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Email, user.Email) }),
                 Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Issuer = "your_issuer",      // Add this line
+                Audience = "your_audience"   // Add this line
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            return Ok(token);
+            var tokenString = tokenHandler.WriteToken(token);
+            return Ok(new
+            {
+                token = tokenString,
+                userId = userDetails.UserID
+            });
         }
 
         [HttpPost]
         [Route("signup")]
         public async Task<ActionResult<Guid>> Signup(User user)
         {
-            // Check if email already exists
             var existingUser = await _context.User.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (existingUser != null)
             {
@@ -71,11 +86,23 @@ namespace ChubAPI.Controllers
             return Ok(user.UserID);
         }
 
+        [Authorize]
         [HttpGet]
-        [Route("status")]
-        public async Task<ActionResult<String>> Status()
+        [Route("users/{UserId}")]
+        public async Task<ActionResult> UserDetails(Guid UserId)
         {
-            return Ok("Success");
+            var user = await _context.User
+                .Where(u => u.UserID == UserId)
+                .Select(u => new { u.UserName, u.Email, u.Phone })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
         }
+
     }
 }
