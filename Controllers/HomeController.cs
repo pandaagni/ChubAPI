@@ -29,7 +29,7 @@ namespace ChubAPI.Controllers
 
         [HttpGet]
         [Route("status")]
-        public async Task<ActionResult<String>> Status()
+        public ActionResult<string> Status()
         {
             return Ok("Success");
         }

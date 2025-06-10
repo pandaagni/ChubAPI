@@ -118,5 +118,20 @@ namespace ChubAPI.Controllers
             await _context.SaveChangesAsync();
             return Ok("Success");
         }
+
+        [HttpGet]
+        [Route("users/{userId}/chatrooms")]
+        public async Task<ActionResult> GetUserChatrooms(Guid userId)
+        {
+            var chatrooms = await _context.ChatroomUsers
+                .Join(_context.Chatroom,
+                    cu => cu.ChatroomId,
+                    c => c.ChatroomId,
+                    (cu, c) => new { ChatroomUser = cu, Chatroom = c }) // Corrected anonymous type property names
+                .Where(joined => joined.ChatroomUser.UserId == userId) // Fixed property access
+                .Select(joined => joined.Chatroom)
+                .ToListAsync();
+            return Ok(chatrooms);
+        }
     }
 }
